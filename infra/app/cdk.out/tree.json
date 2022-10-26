@@ -1,0 +1,393 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.1.126"
+        }
+      },
+      "TestApiG-us-east-1-dev": {
+        "id": "TestApiG-us-east-1-dev",
+        "path": "TestApiG-us-east-1-dev",
+        "children": {
+          "TestApiGRoleus-east-1-dev": {
+            "id": "TestApiGRoleus-east-1-dev",
+            "path": "TestApiG-us-east-1-dev/TestApiGRoleus-east-1-dev",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "TestApiG-us-east-1-dev/TestApiGRoleus-east-1-dev/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "lambda.amazonaws.com"
+                          }
+                        },
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "s3.amazonaws.com"
+                          }
+                        },
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "sqs.amazonaws.com"
+                          }
+                        },
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "apigateway.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "description": "This Iam Role is used across this TestApiG Stack",
+                    "roleName": "TestApiG-role-us-east-1-dev"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.45.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.45.0"
+            }
+          },
+          "test-api": {
+            "id": "test-api",
+            "path": "TestApiG-us-east-1-dev/test-api",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "TestApiG-us-east-1-dev/test-api/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::RestApi",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "test-api"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.CfnRestApi",
+                  "version": "2.45.0"
+                }
+              },
+              "CloudWatchRole": {
+                "id": "CloudWatchRole",
+                "path": "TestApiG-us-east-1-dev/test-api/CloudWatchRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "TestApiG-us-east-1-dev/test-api/CloudWatchRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "apigateway.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.45.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.45.0"
+                }
+              },
+              "Account": {
+                "id": "Account",
+                "path": "TestApiG-us-east-1-dev/test-api/Account",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Account",
+                  "aws:cdk:cloudformation:props": {
+                    "cloudWatchRoleArn": {
+                      "Fn::GetAtt": [
+                        "testapiCloudWatchRoleD7BD24A1",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.CfnAccount",
+                  "version": "2.45.0"
+                }
+              },
+              "Deployment": {
+                "id": "Deployment",
+                "path": "TestApiG-us-east-1-dev/test-api/Deployment",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "TestApiG-us-east-1-dev/test-api/Deployment/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Deployment",
+                      "aws:cdk:cloudformation:props": {
+                        "restApiId": {
+                          "Ref": "testapiD6451F70"
+                        },
+                        "description": "Automatically created by the RestApi construct"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnDeployment",
+                      "version": "2.45.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.Deployment",
+                  "version": "2.45.0"
+                }
+              },
+              "DeploymentStage.prod": {
+                "id": "DeploymentStage.prod",
+                "path": "TestApiG-us-east-1-dev/test-api/DeploymentStage.prod",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "TestApiG-us-east-1-dev/test-api/DeploymentStage.prod/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
+                      "aws:cdk:cloudformation:props": {
+                        "restApiId": {
+                          "Ref": "testapiD6451F70"
+                        },
+                        "deploymentId": {
+                          "Ref": "testapiDeployment356D2C3543e7b551785ce3efc00921d189dbbf16"
+                        },
+                        "stageName": "prod"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnStage",
+                      "version": "2.45.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.Stage",
+                  "version": "2.45.0"
+                }
+              },
+              "Endpoint": {
+                "id": "Endpoint",
+                "path": "TestApiG-us-east-1-dev/test-api/Endpoint",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.45.0"
+                }
+              },
+              "Default": {
+                "id": "Default",
+                "path": "TestApiG-us-east-1-dev/test-api/Default",
+                "children": {
+                  "ANY": {
+                    "id": "ANY",
+                    "path": "TestApiG-us-east-1-dev/test-api/Default/ANY",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "TestApiG-us-east-1-dev/test-api/Default/ANY/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                          "aws:cdk:cloudformation:props": {
+                            "httpMethod": "ANY",
+                            "resourceId": {
+                              "Fn::GetAtt": [
+                                "testapiD6451F70",
+                                "RootResourceId"
+                              ]
+                            },
+                            "restApiId": {
+                              "Ref": "testapiD6451F70"
+                            },
+                            "authorizationType": "NONE",
+                            "integration": {
+                              "type": "MOCK"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                          "version": "2.45.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                      "version": "2.45.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.ResourceBase",
+                  "version": "2.45.0"
+                }
+              },
+              "standupfounder.com": {
+                "id": "standupfounder.com",
+                "path": "TestApiG-us-east-1-dev/test-api/standupfounder.com",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "TestApiG-us-east-1-dev/test-api/standupfounder.com/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::DomainName",
+                      "aws:cdk:cloudformation:props": {
+                        "domainName": "standupfounder.com",
+                        "endpointConfiguration": {
+                          "types": [
+                            "REGIONAL"
+                          ]
+                        },
+                        "mutualTlsAuthentication": {
+                          "truststoreUri": "s3://vinay-us-east-1-dev-bucket43879c71-qc7c245hfmft/truststore.pem"
+                        },
+                        "regionalCertificateArn": "arn:aws:acm:us-east-1:202471327519:certificate/152b0e1d-286f-428a-b8d6-349c627500b5",
+                        "securityPolicy": "TLS_1_2"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnDomainName",
+                      "version": "2.45.0"
+                    }
+                  },
+                  "Map:--=>TestApiGuseast1devtestapi098E944B": {
+                    "id": "Map:--=>TestApiGuseast1devtestapi098E944B",
+                    "path": "TestApiG-us-east-1-dev/test-api/standupfounder.com/Map:--=>TestApiGuseast1devtestapi098E944B",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "TestApiG-us-east-1-dev/test-api/standupfounder.com/Map:--=>TestApiGuseast1devtestapi098E944B/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::BasePathMapping",
+                          "aws:cdk:cloudformation:props": {
+                            "domainName": {
+                              "Ref": "testapistandupfoundercomBC8A7A62"
+                            },
+                            "restApiId": {
+                              "Ref": "testapiD6451F70"
+                            },
+                            "stage": {
+                              "Ref": "testapiDeploymentStageprod5C9E92A4"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnBasePathMapping",
+                          "version": "2.45.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.BasePathMapping",
+                      "version": "2.45.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.DomainName",
+                  "version": "2.45.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_apigateway.RestApi",
+              "version": "2.45.0"
+            }
+          },
+          "cert": {
+            "id": "cert",
+            "path": "TestApiG-us-east-1-dev/cert",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.45.0"
+            }
+          },
+          "existingbucket": {
+            "id": "existingbucket",
+            "path": "TestApiG-us-east-1-dev/existingbucket",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+              "version": "2.45.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "TestApiG-us-east-1-dev/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "TestApiG-us-east-1-dev/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.45.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.126"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.45.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.45.0"
+    }
+  }
+}

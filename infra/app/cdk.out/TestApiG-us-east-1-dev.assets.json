@@ -1,0 +1,20 @@
+{
+  "version": "21.0.0",
+  "files": {
+    "5bb3cfa3787372a0b844f6e6b0a6ad788b6b853a7d0d1c56dcbc1414d26c77e6": {
+      "source": {
+        "path": "TestApiG-us-east-1-dev.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "202471327519-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-202471327519-us-east-1",
+          "objectKey": "5bb3cfa3787372a0b844f6e6b0a6ad788b6b853a7d0d1c56dcbc1414d26c77e6.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::202471327519:role/cdk-hnb659fds-file-publishing-role-202471327519-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

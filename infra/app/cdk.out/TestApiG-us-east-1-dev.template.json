@@ -1,0 +1,270 @@
+{
+ "Description": "vinay testing for aws cdk dev",
+ "Resources": {
+  "TestApiGRoleuseast1dev0AA03CFE": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "s3.amazonaws.com"
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "sqs.amazonaws.com"
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "This Iam Role is used across this TestApiG Stack",
+    "RoleName": "TestApiG-role-us-east-1-dev"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/TestApiGRoleus-east-1-dev/Resource"
+   }
+  },
+  "testapiD6451F70": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Name": "test-api"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/test-api/Resource"
+   }
+  },
+  "testapiCloudWatchRoleD7BD24A1": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/test-api/CloudWatchRole/Resource"
+   }
+  },
+  "testapiAccount9B907665": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "testapiCloudWatchRoleD7BD24A1",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "testapiD6451F70"
+   ],
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/test-api/Account"
+   }
+  },
+  "testapiDeployment356D2C3543e7b551785ce3efc00921d189dbbf16": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "RestApiId": {
+     "Ref": "testapiD6451F70"
+    },
+    "Description": "Automatically created by the RestApi construct"
+   },
+   "DependsOn": [
+    "testapiANY4536A970"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/test-api/Deployment/Resource"
+   }
+  },
+  "testapiDeploymentStageprod5C9E92A4": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "RestApiId": {
+     "Ref": "testapiD6451F70"
+    },
+    "DeploymentId": {
+     "Ref": "testapiDeployment356D2C3543e7b551785ce3efc00921d189dbbf16"
+    },
+    "StageName": "prod"
+   },
+   "DependsOn": [
+    "testapiAccount9B907665"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/test-api/DeploymentStage.prod/Resource"
+   }
+  },
+  "testapiANY4536A970": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "HttpMethod": "ANY",
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "testapiD6451F70",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "testapiD6451F70"
+    },
+    "AuthorizationType": "NONE",
+    "Integration": {
+     "Type": "MOCK"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/test-api/Default/ANY/Resource"
+   }
+  },
+  "testapistandupfoundercomBC8A7A62": {
+   "Type": "AWS::ApiGateway::DomainName",
+   "Properties": {
+    "DomainName": "standupfounder.com",
+    "EndpointConfiguration": {
+     "Types": [
+      "REGIONAL"
+     ]
+    },
+    "MutualTlsAuthentication": {
+     "TruststoreUri": "s3://vinay-us-east-1-dev-bucket43879c71-qc7c245hfmft/truststore.pem"
+    },
+    "RegionalCertificateArn": "arn:aws:acm:us-east-1:202471327519:certificate/152b0e1d-286f-428a-b8d6-349c627500b5",
+    "SecurityPolicy": "TLS_1_2"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/test-api/standupfounder.com/Resource"
+   }
+  },
+  "testapistandupfoundercomMapTestApiGuseast1devtestapi098E944BF291FBA2": {
+   "Type": "AWS::ApiGateway::BasePathMapping",
+   "Properties": {
+    "DomainName": {
+     "Ref": "testapistandupfoundercomBC8A7A62"
+    },
+    "RestApiId": {
+     "Ref": "testapiD6451F70"
+    },
+    "Stage": {
+     "Ref": "testapiDeploymentStageprod5C9E92A4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/test-api/standupfounder.com/Map:--=>TestApiGuseast1devtestapi098E944B/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/12PSQ7CMAxFz8I+DYhJYsmwBapyAGSCKabNIOIIVVXvTlIQIFZ+/t/2T8ZyOpOjATx8ps5VVtNJtgcGVYkoHVsCLdvC1ijWF5NqJ8BRCYwPaKKDnpeOevOLS6VsMCw26GrbaIwY1Z8uBpT9xRfEVRvuClfgUWyRr/aczDdtrAYyO9D9xk+XxnPg6xacI1Mm90/qhJ/IVVAVcnK6NLIP7AJ/Mt9P77kTeRMjzXAiF3I+uHmi7B4/Qhpl8apPM2HVEi8BAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "TestApiG-us-east-1-dev/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "testapiEndpoint4AE34D29": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "testapiD6451F70"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "testapiDeploymentStageprod5C9E92A4"
+      },
+      "/"
+     ]
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
